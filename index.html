@@ -3,23 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balotario - Minería y Ambiente 🌱 (Aleatorio)</title>
+    <title>Balotario - Minería y Ambiente 🌙 (Modo Noche)</title>
     <style>
         :root {
-            --correcto: #2e7d32;
-            --correcto-bg: #c8e6c9;
-            --incorrecto: #c62828;
-            --incorrecto-bg: #ffcdd2;
-            --fondo: #f4f6f9;
-            --tarjeta: #ffffff;
-            --texto: #1e293b;
-            --borde: #e2e8f0;
-            --boton-verdadero: #2563eb;
-            --boton-falso: #7c3aed;
-            --boton-hover-verdadero: #1d4ed8;
-            --boton-hover-falso: #6d28d9;
-            --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --sombra-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+            --fondo: #0f1119;
+            --tarjeta: #1a1e2b;
+            --tarjeta-hover: #212636;
+            --texto: #e2e8f0;
+            --texto-secundario: #b0bdd4;
+            --borde: #2d3548;
+            --correcto: #4ade80;
+            --correcto-bg: rgba(74, 222, 128, 0.12);
+            --correcto-borde: #22c55e;
+            --incorrecto: #f87171;
+            --incorrecto-bg: rgba(248, 113, 113, 0.12);
+            --incorrecto-borde: #ef4444;
+            --boton-verdadero-bg: #1e293b;
+            --boton-verdadero-texto: #93c5fd;
+            --boton-verdadero-borde: #334155;
+            --boton-verdadero-hover: #2563eb;
+            --boton-falso-bg: #1e1b2e;
+            --boton-falso-texto: #c4b5fd;
+            --boton-falso-borde: #3b3561;
+            --boton-falso-hover: #7c3aed;
+            --barra-bg: #2d3548;
+            --barra-progreso: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            --header-bg: rgba(26, 30, 43, 0.9);
+            --sombra: 0 4px 12px rgba(0,0,0,0.3);
+            --sombra-hover: 0 10px 25px rgba(0,0,0,0.4);
+            --scrollbar-bg: #2d3548;
+            --scrollbar-thumb: #4b5563;
         }
 
         * {
@@ -30,15 +43,20 @@
 
         body {
             font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #eef2f7;
+            background: var(--fondo);
             color: var(--texto);
             line-height: 1.6;
             min-height: 100vh;
             padding: 1.5rem;
             background-image:
-                radial-gradient(ellipse at 20% 10%, rgba(37, 99, 235, 0.03) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 90%, rgba(124, 58, 237, 0.03) 0%, transparent 60%);
+                radial-gradient(ellipse at 20% 10%, rgba(59,130,246,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 90%, rgba(139,92,246,0.04) 0%, transparent 60%);
         }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 8px; }
 
         .contenedor {
             max-width: 900px;
@@ -47,7 +65,7 @@
 
         /* Cabecera */
         .cabecera {
-            background: white;
+            background: var(--header-bg);
             border-radius: 24px;
             padding: 2rem 2rem 1.5rem;
             margin-bottom: 1.8rem;
@@ -57,14 +75,14 @@
             position: sticky;
             top: 1rem;
             z-index: 10;
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .cabecera h1 {
             font-size: 2rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -73,7 +91,7 @@
         }
 
         .cabecera .subtitulo {
-            color: #64748b;
+            color: var(--texto-secundario);
             font-size: 0.95rem;
             margin-bottom: 1.2rem;
         }
@@ -89,16 +107,17 @@
 
         .progreso-texto {
             font-weight: 600;
-            font-size: 1rem;
-            color: #475569;
-            background: #f1f5f9;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+            background: rgba(255,255,255,0.06);
             padding: 0.5rem 1.2rem;
             border-radius: 40px;
             white-space: nowrap;
+            border: 1px solid var(--borde);
         }
 
         .progreso-texto span {
-            color: #2563eb;
+            color: #60a5fa;
             font-weight: 700;
         }
 
@@ -107,38 +126,38 @@
             min-width: 120px;
             max-width: 300px;
             height: 10px;
-            background: #e2e8f0;
+            background: var(--barra-bg);
             border-radius: 20px;
             overflow: hidden;
         }
 
         .barra-interna {
             height: 100%;
-            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            background: var(--barra-progreso);
             border-radius: 20px;
             transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0%;
         }
 
         .btn-reiniciar {
-            background: white;
-            border: 1.5px solid #e2e8f0;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--borde);
             padding: 0.5rem 1.2rem;
             border-radius: 40px;
             cursor: pointer;
             font-weight: 600;
             font-size: 0.9rem;
-            color: #475569;
+            color: #cbd5e1;
             transition: all 0.2s;
             white-space: nowrap;
             font-family: inherit;
         }
 
         .btn-reiniciar:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            color: #1e293b;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            background: rgba(255,255,255,0.1);
+            border-color: #4b5563;
+            color: #f1f5f9;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         /* Grid de preguntas */
@@ -154,7 +173,7 @@
             border-radius: 16px;
             padding: 1.3rem 1.5rem;
             box-shadow: var(--sombra);
-            border: 1.5px solid var(--borde);
+            border: 1px solid var(--borde);
             transition: all 0.25s ease;
             display: flex;
             flex-wrap: wrap;
@@ -165,34 +184,36 @@
 
         .tarjeta:hover {
             box-shadow: var(--sombra-hover);
-            border-color: #cbd5e1;
+            border-color: #4b5563;
+            background: var(--tarjeta-hover);
             transform: translateY(-1px);
         }
 
         .tarjeta.respondida {
-            border-left: 4px solid #94a3b8;
+            border-left: 4px solid #6b7280;
         }
 
         .tarjeta.acertada {
             border-left: 4px solid var(--correcto);
-            background: #f9fdf9;
+            background: rgba(74, 222, 128, 0.06);
         }
 
         .tarjeta.fallada {
             border-left: 4px solid var(--incorrecto);
-            background: #fefafa;
+            background: rgba(248, 113, 113, 0.06);
         }
 
         .numero-pregunta {
             font-weight: 700;
             font-size: 0.85rem;
-            color: #64748b;
-            background: #f1f5f9;
+            color: var(--texto-secundario);
+            background: rgba(255,255,255,0.07);
             border-radius: 50px;
             padding: 0.3rem 0.7rem;
             min-width: 38px;
             text-align: center;
             flex-shrink: 0;
+            border: 1px solid var(--borde);
         }
 
         .texto-pregunta {
@@ -200,7 +221,7 @@
             min-width: 200px;
             font-weight: 500;
             font-size: 0.98rem;
-            color: #334155;
+            color: var(--texto);
             line-height: 1.5;
         }
 
@@ -213,7 +234,7 @@
         .btn-respuesta {
             padding: 0.55rem 1.3rem;
             border-radius: 50px;
-            border: none;
+            border: 1px solid;
             cursor: pointer;
             font-weight: 600;
             font-size: 0.88rem;
@@ -222,39 +243,42 @@
             font-family: inherit;
             position: relative;
             white-space: nowrap;
+            background: transparent;
         }
 
         .btn-verdadero {
-            background: #eff6ff;
-            color: #2563eb;
-            border: 1.5px solid #bfdbfe;
+            background: var(--boton-verdadero-bg);
+            color: var(--boton-verdadero-texto);
+            border-color: var(--boton-verdadero-borde);
         }
 
         .btn-verdadero:hover:not(:disabled) {
-            background: #dbeafe;
-            border-color: #93c5fd;
+            background: #2563eb;
+            color: white;
+            border-color: #3b82f6;
             transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
         }
 
         .btn-falso {
-            background: #f5f3ff;
-            color: #7c3aed;
-            border: 1.5px solid #ddd6fe;
+            background: var(--boton-falso-bg);
+            color: var(--boton-falso-texto);
+            border-color: var(--boton-falso-borde);
         }
 
         .btn-falso:hover:not(:disabled) {
-            background: #ede9fe;
-            border-color: #c4b5fd;
+            background: #7c3aed;
+            color: white;
+            border-color: #8b5cf6;
             transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
         }
 
         /* Estados de respuesta */
         .btn-respuesta.correcto {
             background: var(--correcto-bg) !important;
             color: var(--correcto) !important;
-            border-color: #81c784 !important;
+            border-color: var(--correcto-borde) !important;
             font-weight: 700;
             cursor: default;
             animation: pulso-verde 0.5s ease;
@@ -263,7 +287,7 @@
         .btn-respuesta.incorrecto {
             background: var(--incorrecto-bg) !important;
             color: var(--incorrecto) !important;
-            border-color: #ef9a9a !important;
+            border-color: var(--incorrecto-borde) !important;
             font-weight: 700;
             cursor: default;
             animation: sacudir 0.5s ease;
@@ -271,7 +295,7 @@
 
         .btn-respuesta:disabled {
             cursor: default;
-            opacity: 0.85;
+            opacity: 0.9;
             pointer-events: none;
         }
 
@@ -351,7 +375,7 @@
                 <div class="barra-externa">
                     <div class="barra-interna" id="barra-progreso"></div>
                 </div>
-                <span class="progreso-texto" id="contador-aciertos" style="background:#e8f5e9; color:#2e7d32;">🎯 Aciertos: 0</span>
+                <span class="progreso-texto" id="contador-aciertos" style="background: rgba(74,222,128,0.1); color: #4ade80;">🎯 Aciertos: 0</span>
                 <button class="btn-reiniciar" onclick="reiniciarTodo()" title="Reiniciar y mezclar preguntas">🔄 Reiniciar</button>
             </div>
         </header>
@@ -364,7 +388,7 @@
 
     <script>
         // ============================================
-        // DATOS ORIGINALES DEL BALOTARIO (sin modificar)
+        // DATOS ORIGINALES DEL BALOTARIO
         // ============================================
         const preguntasBase = [
             { numero: 1, pregunta: "La minería constituye uno de los principales motores de la economía peruana.", respuesta: true },
@@ -419,16 +443,10 @@
             { numero: 50, pregunta: "Una adecuada evaluación ambiental reduce el riesgo de conflictos socioambientales.", respuesta: true }
         ];
 
-        // ============================================
-        // ESTADO DE LA APLICACIÓN
-        // ============================================
-        let estadoRespuestas = {}; // { numeroOriginal: 'acertada' | 'fallada' }
-        // Array que usaremos para mostrar (se mezclará cada vez)
+        // Estado
+        let estadoRespuestas = {};
         let preguntas = [];
 
-        // ============================================
-        // FUNCIÓN PARA MEZCLAR ARRAY (Fisher-Yates)
-        // ============================================
         function mezclarArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -437,21 +455,16 @@
             return array;
         }
 
-        // ============================================
-        // RENDERIZAR PREGUNTAS
-        // ============================================
         const grid = document.getElementById('grid-preguntas');
 
         function renderizarPreguntas() {
             grid.innerHTML = '';
-            // Usamos forEach con índice para mostrar números consecutivos
             preguntas.forEach((p, index) => {
-                const nuevoNumero = index + 1; // Número de orden actual (1 a 50)
+                const nuevoNumero = index + 1;
                 const tarjeta = document.createElement('div');
                 tarjeta.classList.add('tarjeta');
-                tarjeta.id = `tarjeta-${p.numero}`; // ID basado en número original para el estado
+                tarjeta.id = `tarjeta-${p.numero}`;
 
-                // Si ya fue respondida, añadir clase correspondiente
                 if (estadoRespuestas[p.numero] === 'acertada') {
                     tarjeta.classList.add('respondida', 'acertada');
                 } else if (estadoRespuestas[p.numero] === 'fallada') {
@@ -477,7 +490,6 @@
                     </div>
                 `;
 
-                // Si ya fue respondida, marcar visualmente los botones
                 if (estadoRespuestas[p.numero]) {
                     const btnVerdadero = tarjeta.querySelector('.btn-verdadero');
                     const btnFalso = tarjeta.querySelector('.btn-falso');
@@ -497,14 +509,10 @@
                 grid.appendChild(tarjeta);
             });
 
-            // Re-asignar event listeners
             asignarEventos();
             actualizarProgreso();
         }
 
-        // ============================================
-        // ASIGNAR EVENTOS A BOTONES
-        // ============================================
         function asignarEventos() {
             const botones = document.querySelectorAll('.btn-respuesta:not([disabled])');
             botones.forEach(btn => {
@@ -515,56 +523,38 @@
         function manejarClick(evento) {
             const btn = evento.currentTarget;
             const numero = parseInt(btn.dataset.numero);
-            const respuestaUsuario = btn.dataset.respuestaUsuario === 'true'; // true = Verdadero
-
-            // Encontrar la pregunta en el array actual (mezclado)
+            const respuestaUsuario = btn.dataset.respuestaUsuario === 'true';
             const pregunta = preguntas.find(p => p.numero === numero);
             if (!pregunta) return;
 
             const respuestaCorrecta = pregunta.respuesta;
             const acerto = (respuestaUsuario === respuestaCorrecta);
-
-            // Registrar estado
             estadoRespuestas[numero] = acerto ? 'acertada' : 'fallada';
 
-            // Obtener la tarjeta y los botones
             const tarjeta = document.getElementById(`tarjeta-${numero}`);
             const btnVerdadero = tarjeta.querySelector('.btn-verdadero');
             const btnFalso = tarjeta.querySelector('.btn-falso');
 
-            // Deshabilitar ambos botones
             btnVerdadero.disabled = true;
             btnFalso.disabled = true;
 
-            // Marcar el botón correcto siempre en verde
             if (respuestaCorrecta === true) {
                 btnVerdadero.classList.add('correcto');
             } else {
                 btnFalso.classList.add('correcto');
             }
 
-            // Si el usuario falló, marcar el botón clickeado en rojo
             if (!acerto) {
                 btn.classList.add('incorrecto');
             }
 
-            // Actualizar clases de la tarjeta
             tarjeta.classList.add('respondida');
-            if (acerto) {
-                tarjeta.classList.add('acertada');
-            } else {
-                tarjeta.classList.add('fallada');
-            }
-
-            // Scroll suave
+            tarjeta.classList.add(acerto ? 'acertada' : 'fallada');
             tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
             actualizarProgreso();
         }
 
-        // ============================================
-        // ACTUALIZAR BARRA DE PROGRESO
-        // ============================================
         function actualizarProgreso() {
             const total = preguntas.length;
             const respondidas = Object.keys(estadoRespuestas).length;
@@ -574,56 +564,42 @@
             document.getElementById('contador-aciertos').textContent = `🎯 Aciertos: ${aciertos}`;
             document.getElementById('barra-progreso').style.width = `${(respondidas / total) * 100}%`;
 
-            // Color del contador de aciertos según rendimiento
             const contadorAciertos = document.getElementById('contador-aciertos');
             if (respondidas > 0) {
                 const porcentaje = (aciertos / respondidas) * 100;
                 if (porcentaje >= 80) {
-                    contadorAciertos.style.background = '#e8f5e9';
-                    contadorAciertos.style.color = '#2e7d32';
+                    contadorAciertos.style.background = 'rgba(74,222,128,0.15)';
+                    contadorAciertos.style.color = '#4ade80';
                 } else if (porcentaje >= 50) {
-                    contadorAciertos.style.background = '#fff8e1';
-                    contadorAciertos.style.color = '#f57f17';
+                    contadorAciertos.style.background = 'rgba(250,204,21,0.15)';
+                    contadorAciertos.style.color = '#facc15';
                 } else {
-                    contadorAciertos.style.background = '#ffebee';
-                    contadorAciertos.style.color = '#c62828';
+                    contadorAciertos.style.background = 'rgba(248,113,113,0.15)';
+                    contadorAciertos.style.color = '#f87171';
                 }
+            } else {
+                contadorAciertos.style.background = 'rgba(74,222,128,0.1)';
+                contadorAciertos.style.color = '#4ade80';
             }
         }
 
-        // ============================================
-        // REINICIAR TODO (limpia respuestas y reordena)
-        // ============================================
         function reiniciarTodo() {
             if (Object.keys(estadoRespuestas).length > 0) {
                 if (!confirm('¿Seguro que deseas reiniciar? Se mezclarán las preguntas y perderás el progreso actual.')) {
                     return;
                 }
             }
-            // Limpiar estado
             estadoRespuestas = {};
-            // Mezclar preguntas de nuevo
             preguntas = mezclarArray([...preguntasBase]);
-            // Re-renderizar
             renderizarPreguntas();
-            // Scroll al inicio
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            // Restaurar color del contador de aciertos
-            document.getElementById('contador-aciertos').style.background = '#e8f5e9';
-            document.getElementById('contador-aciertos').style.color = '#2e7d32';
+            document.getElementById('contador-aciertos').style.background = 'rgba(74,222,128,0.1)';
+            document.getElementById('contador-aciertos').style.color = '#4ade80';
         }
 
-        // ============================================
-        // INICIALIZAR (mezclar al cargar la página)
-        // ============================================
+        // Inicializar
         preguntas = mezclarArray([...preguntasBase]);
         renderizarPreguntas();
-
-        console.log('✅ Balotario listo con preguntas en orden aleatorio y numeración consecutiva.');
-        console.log('📊 Total de preguntas:', preguntas.length);
-        console.log('🟢 Verdadero:', preguntasBase.filter(p => p.respuesta === true).length);
-        console.log('🔴 Falso:', preguntasBase.filter(p => p.respuesta === false).length);
-        console.log('🔄 Cada vez que reinicies, el orden y los números visibles cambiarán.');
     </script>
 </body>
 </html>
