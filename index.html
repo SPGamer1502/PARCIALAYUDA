@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Balotario - Minería y Ambiente 🌙 (Modo Noche)</title>
+    <title>Balotario - Minería y Ambiente 🌙 (60 preguntas)</title>
     <style>
         :root {
             --fondo: #0f1119;
@@ -53,17 +53,15 @@
                 radial-gradient(ellipse at 80% 90%, rgba(139,92,246,0.04) 0%, transparent 60%);
         }
 
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--scrollbar-bg); }
         ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 8px; }
 
         .contenedor {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
         }
 
-        /* Cabecera */
         .cabecera {
             background: var(--header-bg);
             border-radius: 24px;
@@ -96,7 +94,6 @@
             margin-bottom: 1.2rem;
         }
 
-        /* Barra de progreso */
         .barra-progreso {
             display: flex;
             align-items: center;
@@ -160,14 +157,12 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        /* Grid de preguntas */
         .grid-preguntas {
             display: flex;
             flex-direction: column;
             gap: 0.9rem;
         }
 
-        /* Tarjeta de pregunta */
         .tarjeta {
             background: var(--tarjeta);
             border-radius: 16px;
@@ -274,7 +269,6 @@
             box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
         }
 
-        /* Estados de respuesta */
         .btn-respuesta.correcto {
             background: var(--correcto-bg) !important;
             color: var(--correcto) !important;
@@ -313,7 +307,6 @@
             80% { transform: translateX(3px); }
         }
 
-        /* Responsive */
         @media (max-width: 650px) {
             .tarjeta {
                 flex-direction: column;
@@ -366,12 +359,11 @@
 </head>
 <body>
     <div class="contenedor">
-        <!-- Cabecera con progreso -->
         <header class="cabecera">
             <h1>📚 Balotario Minería & Ambiente</h1>
-            <p class="subtitulo">Parcial · Verdadero o Falso · 50 preguntas (orden aleatorio)</p>
+            <p class="subtitulo">Parcial · Verdadero o Falso · 60 preguntas (orden aleatorio)</p>
             <div class="barra-progreso">
-                <span class="progreso-texto">✅ <span id="contador-respondidas">0</span> / 50 respondidas</span>
+                <span class="progreso-texto">✅ <span id="contador-respondidas">0</span> / 60 respondidas</span>
                 <div class="barra-externa">
                     <div class="barra-interna" id="barra-progreso"></div>
                 </div>
@@ -380,67 +372,74 @@
             </div>
         </header>
 
-        <!-- Grid de preguntas -->
-        <div class="grid-preguntas" id="grid-preguntas">
-            <!-- Se llena dinámicamente con JavaScript -->
-        </div>
+        <div class="grid-preguntas" id="grid-preguntas"></div>
     </div>
 
     <script>
         // ============================================
-        // DATOS ORIGINALES DEL BALOTARIO
+        // NUEVAS 60 PREGUNTAS DEL BALOTARIO
         // ============================================
         const preguntasBase = [
-            { numero: 1, pregunta: "La minería constituye uno de los principales motores de la economía peruana.", respuesta: true },
-            { numero: 2, pregunta: "El desarrollo sostenible busca equilibrar el crecimiento económico, la protección ambiental y el bienestar social.", respuesta: true },
-            { numero: 3, pregunta: "La minería genera únicamente beneficios económicos y ningún impacto ambiental.", respuesta: false },
-            { numero: 4, pregunta: "La minería metálica representa una parte importante de las exportaciones del Perú.", respuesta: true },
-            { numero: 5, pregunta: "El cobre es uno de los minerales más importantes de la economía peruana.", respuesta: true },
-            { numero: 6, pregunta: "El crecimiento de la producción minera aumenta la presión sobre el ambiente.", respuesta: true },
-            { numero: 7, pregunta: "El MINAM es la autoridad ambiental nacional.", respuesta: true },
-            { numero: 8, pregunta: "El SENACE evalúa y aprueba los Estudios de Impacto Ambiental detallados de grandes proyectos.", respuesta: true },
-            { numero: 9, pregunta: "El OEFA fiscaliza el cumplimiento de las obligaciones ambientales.", respuesta: true },
-            { numero: 10, pregunta: "El INGEMMET otorga concesiones mineras.", respuesta: true },
-            { numero: 11, pregunta: "El OEFA entrega concesiones mineras.", respuesta: false },
-            { numero: 12, pregunta: "El SEIA organiza el proceso de evaluación ambiental en el Perú.", respuesta: true },
-            { numero: 13, pregunta: "Todo proyecto con impactos ambientales significativos debe contar con certificación ambiental.", respuesta: true },
-            { numero: 14, pregunta: "Una empresa puede iniciar un proyecto minero sin certificación ambiental.", respuesta: false },
-            { numero: 15, pregunta: "La certificación ambiental se obtiene luego de la aprobación del instrumento ambiental correspondiente.", respuesta: true },
-            { numero: 16, pregunta: "El Estudio de Impacto Ambiental busca prevenir, reducir y controlar impactos negativos.", respuesta: true },
-            { numero: 17, pregunta: "El EIA solo analiza aspectos económicos.", respuesta: false },
-            { numero: 18, pregunta: "La línea base ambiental forma parte del EIA.", respuesta: true },
-            { numero: 19, pregunta: "La participación ciudadana forma parte del proceso de evaluación ambiental.", respuesta: true },
-            { numero: 20, pregunta: "El ITS puede utilizarse para modificaciones menores, no para reemplazar un EIA completo.", respuesta: true },
-            { numero: 21, pregunta: "El EIA también considera impactos sociales.", respuesta: true },
-            { numero: 22, pregunta: "La exploración es la primera etapa del desarrollo de un proyecto minero.", respuesta: true },
-            { numero: 23, pregunta: "Durante la exploración nunca existen impactos ambientales.", respuesta: false },
-            { numero: 24, pregunta: "La construcción implica una fuerte transformación del territorio.", respuesta: true },
-            { numero: 25, pregunta: "Durante la operación minera aumenta la generación de residuos mineros.", respuesta: true },
-            { numero: 26, pregunta: "El cierre de minas busca rehabilitar el área intervenida.", respuesta: true },
-            { numero: 27, pregunta: "Después del cierre de la mina no existe monitoreo ambiental.", respuesta: false },
-            { numero: 28, pregunta: "El cierre de minas también considera aspectos sociales.", respuesta: true },
-            { numero: 29, pregunta: "Durante la explotación minera se utilizan grandes cantidades de agua.", respuesta: true },
-            { numero: 30, pregunta: "La explotación comienza inmediatamente después de descubrir un yacimiento.", respuesta: false },
-            { numero: 31, pregunta: "La minería puede contaminar agua, aire y suelo.", respuesta: true },
-            { numero: 32, pregunta: "El mercurio constituye uno de los principales contaminantes asociados a ciertas actividades mineras.", respuesta: true },
-            { numero: 33, pregunta: "Los pasivos ambientales mineros son problemas ambientales acumulados que requieren recuperación.", respuesta: true },
-            { numero: 34, pregunta: "La contaminación ambiental puede afectar la salud humana.", respuesta: true },
-            { numero: 35, pregunta: "La biodiversidad puede verse afectada por la actividad minera.", respuesta: true },
-            { numero: 36, pregunta: "La minería ilegal genera importantes impactos ambientales.", respuesta: true },
-            { numero: 37, pregunta: "La minería informal e ilegal significan exactamente lo mismo.", respuesta: false },
-            { numero: 38, pregunta: "Los conflictos socioambientales están relacionados únicamente con factores económicos.", respuesta: false },
-            { numero: 39, pregunta: "La participación ciudadana ayuda a prevenir conflictos socioambientales.", respuesta: true },
-            { numero: 40, pregunta: "La transparencia favorece una mejor gobernanza ambiental.", respuesta: true },
-            { numero: 41, pregunta: "El canon minero beneficia a los gobiernos regionales y locales.", respuesta: true },
-            { numero: 42, pregunta: "Las regalías mineras forman parte de los mecanismos económicos vinculados a la minería.", respuesta: true },
-            { numero: 43, pregunta: "La concesión minera autoriza automáticamente el inicio de la explotación.", respuesta: false },
-            { numero: 44, pregunta: "Para ejecutar un proyecto minero también se requieren otros permisos además de la concesión.", respuesta: true },
-            { numero: 45, pregunta: "Los recursos naturales son patrimonio de la Nación.", respuesta: true },
-            { numero: 46, pregunta: "El aprovechamiento de los recursos naturales debe ser sostenible.", respuesta: true },
-            { numero: 47, pregunta: "El desarrollo sostenible solo considera el aspecto ambiental.", respuesta: false },
-            { numero: 48, pregunta: "La fiscalización ambiental contribuye al desarrollo sostenible.", respuesta: true },
-            { numero: 49, pregunta: "El fortalecimiento institucional mejora la gestión ambiental minera.", respuesta: true },
-            { numero: 50, pregunta: "Una adecuada evaluación ambiental reduce el riesgo de conflictos socioambientales.", respuesta: true }
+            { numero: 1, pregunta: "La minería metálica y sus servicios conexos representaron aproximadamente el 8,5 % del PBI peruano entre 2010 y 2020.", respuesta: true },
+            { numero: 2, pregunta: "El canon minero constituye uno de los mecanismos mediante los cuales la actividad minera transfiere recursos a los gobiernos subnacionales.", respuesta: true },
+            { numero: 3, pregunta: "El Perú ocupa el primer lugar mundial en reservas de cobre.", respuesta: false },
+            { numero: 4, pregunta: "El SENACE es el organismo encargado de la certificación ambiental de proyectos de inversión de gran envergadura.", respuesta: true },
+            { numero: 5, pregunta: "El OEFA tiene como función principal la evaluación y fiscalización ambiental.", respuesta: true },
+            { numero: 6, pregunta: "La minería ilegal no genera impactos ambientales significativos sobre el agua, el suelo y el aire.", respuesta: false },
+            { numero: 7, pregunta: "La contaminación por mercurio constituye uno de los principales problemas ambientales asociados a la actividad minera.", respuesta: true },
+            { numero: 8, pregunta: "Los pasivos ambientales mineros representan un desafío para la gestión ambiental del Perú.", respuesta: true },
+            { numero: 9, pregunta: "Las exportaciones mineras representaron alrededor del 59 % de las exportaciones totales del Perú entre 2010 y 2020.", respuesta: true },
+            { numero: 10, pregunta: "La pandemia de COVID-19 produjo una reducción temporal de la producción minera durante el año 2020.", respuesta: true },
+            { numero: 11, pregunta: "El Perú es uno de los principales productores mundiales de cobre.", respuesta: true },
+            { numero: 12, pregunta: "La producción de molibdeno presentó un crecimiento acumulado importante entre 2009 y 2019.", respuesta: true },
+            { numero: 13, pregunta: "La producción de oro aumentó de manera constante entre 2009 y 2019 sin registrar disminuciones.", respuesta: false },
+            { numero: 14, pregunta: "Los conflictos relacionados con la minería representan una parte importante de los conflictos socioambientales del país.", respuesta: true },
+            { numero: 15, pregunta: "El fortalecimiento de la institucionalidad ambiental fue una de las recomendaciones formuladas para el Perú.", respuesta: true },
+            { numero: 16, pregunta: "La evaluación del desempeño ambiental del Perú fue realizada únicamente por el Ministerio de Energía y Minas.", respuesta: false },
+            { numero: 17, pregunta: "El documento de la CEPAL analiza la implementación de las recomendaciones de desempeño ambiental relacionadas con el sector minero.", respuesta: true },
+            { numero: 18, pregunta: "La minería genera beneficios económicos, pero también puede ocasionar conflictos sociales y ambientales.", respuesta: true },
+            { numero: 19, pregunta: "El uso de instrumentos económicos para la gestión ambiental fue recomendado en la evaluación del desempeño ambiental.", respuesta: true },
+            { numero: 20, pregunta: "Las recomendaciones de la evaluación ambiental estuvieron dirigidas exclusivamente al sector minero.", respuesta: false },
+            { numero: 21, pregunta: "El proyecto de inversión minera atraviesa diferentes etapas antes de iniciar la explotación del yacimiento.", respuesta: true },
+            { numero: 22, pregunta: "La exploración minera constituye la última etapa del ciclo de vida de un proyecto minero.", respuesta: false },
+            { numero: 23, pregunta: "La etapa de construcción suele implicar una importante remoción de suelos y movimiento de maquinaria pesada.", respuesta: true },
+            { numero: 24, pregunta: "Durante la etapa de operación minera se incrementa el uso de explosivos y del recurso hídrico.", respuesta: true },
+            { numero: 25, pregunta: "El cierre de minas solo consiste en abandonar las instalaciones cuando termina la explotación.", respuesta: false },
+            { numero: 26, pregunta: "El cierre de una mina debe contemplar actividades de rehabilitación y monitoreo posterior al cierre.", respuesta: true },
+            { numero: 27, pregunta: "La certificación ambiental es un requisito para desarrollar proyectos mineros con impactos ambientales significativos.", respuesta: true },
+            { numero: 28, pregunta: "Un proyecto minero puede iniciar sus operaciones sin certificación ambiental si cuenta con una concesión minera.", respuesta: false },
+            { numero: 29, pregunta: "La desaprobación del instrumento de gestión ambiental impide legalmente iniciar el proyecto de inversión.", respuesta: true },
+            { numero: 30, pregunta: "La concesión minera otorga automáticamente el derecho de utilizar cualquier terreno superficial sin autorización adicional.", respuesta: false },
+            { numero: 31, pregunta: "Los recursos minerales son considerados patrimonio de la Nación según la legislación peruana.", respuesta: true },
+            { numero: 32, pregunta: "El aprovechamiento de los recursos minerales debe realizarse de manera sostenible.", respuesta: true },
+            { numero: 33, pregunta: "La concesión minera es otorgada por el Instituto Geológico, Minero y Metalúrgico (INGEMMET).", respuesta: true },
+            { numero: 34, pregunta: "La participación ciudadana forma parte de los principios que fortalecen la gobernanza ambiental.", respuesta: true },
+            { numero: 35, pregunta: "Los Estudios de Impacto Ambiental buscan identificar, prevenir y manejar los impactos ambientales de un proyecto minero.", respuesta: true },
+            { numero: 36, pregunta: "El Sistema Nacional de Evaluación de Impacto Ambiental (SEIA) no tiene relación con las actividades mineras.", respuesta: false },
+            { numero: 37, pregunta: "La evaluación del impacto ambiental considera únicamente los impactos sobre el medio físico y excluye los aspectos sociales.", respuesta: false },
+            { numero: 38, pregunta: "La exploración minera de mayor magnitud puede requerir campamentos y generar residuos sólidos y aguas residuales.", respuesta: true },
+            { numero: 39, pregunta: "La construcción de caminos y plataformas durante la exploración puede alterar el suelo y favorecer procesos de erosión.", respuesta: true },
+            { numero: 40, pregunta: "El Informe Técnico Sustentatorio (ITS) es analizado en el documento como un tema relevante dentro de la evaluación ambiental minera.", respuesta: true },
+            { numero: 41, pregunta: "El OEFA es el organismo responsable de supervisar y fiscalizar el cumplimiento de las obligaciones ambientales en las actividades mineras.", respuesta: true },
+            { numero: 42, pregunta: "El SENACE reemplazó al OEFA en las funciones de fiscalización ambiental.", respuesta: false },
+            { numero: 43, pregunta: "Los Estudios de Impacto Ambiental constituyen instrumentos de gestión ambiental.", respuesta: true },
+            { numero: 44, pregunta: "La minería puede generar contaminación del agua, del aire y del suelo si no se gestiona adecuadamente.", respuesta: true },
+            { numero: 45, pregunta: "Los pasivos ambientales mineros corresponden únicamente a minas que continúan en operación.", respuesta: false },
+            { numero: 46, pregunta: "La formalización de la pequeña minería busca reducir los impactos ambientales y sociales asociados a la minería informal e ilegal.", respuesta: true },
+            { numero: 47, pregunta: "La minería ilegal representa un problema ambiental y social en el Perú.", respuesta: true },
+            { numero: 48, pregunta: "La evaluación del impacto ambiental permite identificar medidas de prevención, mitigación y control de impactos.", respuesta: true },
+            { numero: 49, pregunta: "Durante la explotación minera no se generan residuos provenientes del procesamiento del mineral.", respuesta: false },
+            { numero: 50, pregunta: "Las relaveras forman parte de las instalaciones donde se depositan residuos del beneficio minero.", respuesta: true },
+            { numero: 51, pregunta: "El acceso al terreno superficial constituye una condición legal que debe cumplirse para desarrollar un proyecto minero.", respuesta: true },
+            { numero: 52, pregunta: "La concesión minera por sí sola autoriza automáticamente la construcción de todas las instalaciones del proyecto.", respuesta: false },
+            { numero: 53, pregunta: "El desarrollo sostenible busca equilibrar el crecimiento económico, la protección ambiental y el bienestar social.", respuesta: true },
+            { numero: 54, pregunta: "La evaluación del desempeño ambiental del Perú incluyó recomendaciones relacionadas con la gobernanza ambiental.", respuesta: true },
+            { numero: 55, pregunta: "El fortalecimiento de la coordinación entre instituciones públicas forma parte de las recomendaciones analizadas en el documento de la CEPAL.", respuesta: true },
+            { numero: 56, pregunta: "La educación ambiental y el acceso a la información son aspectos considerados importantes para fortalecer la gestión ambiental.", respuesta: true },
+            { numero: 57, pregunta: "El Perú es reconocido como uno de los principales productores y poseedores de reservas de diversos minerales a nivel mundial.", respuesta: true },
+            { numero: 58, pregunta: "La actividad minera no requiere planificación antes de iniciar la explotación del yacimiento.", respuesta: false },
+            { numero: 59, pregunta: "La protección del ambiente constituye un elemento esencial dentro del desarrollo de los proyectos mineros sostenibles.", respuesta: true },
+            { numero: 60, pregunta: "La evaluación del impacto ambiental tiene como finalidad permitir que un proyecto minero se ejecute sin importar los impactos que pueda generar.", respuesta: false }
         ];
 
         // Estado
@@ -600,6 +599,11 @@
         // Inicializar
         preguntas = mezclarArray([...preguntasBase]);
         renderizarPreguntas();
+
+        console.log('✅ Balotario listo con 60 preguntas en orden aleatorio y modo oscuro.');
+        console.log('📊 Total de preguntas:', preguntas.length);
+        console.log('🟢 Verdadero:', preguntasBase.filter(p => p.respuesta === true).length);
+        console.log('🔴 Falso:', preguntasBase.filter(p => p.respuesta === false).length);
     </script>
 </body>
 </html>
