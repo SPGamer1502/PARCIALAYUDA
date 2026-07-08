@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balotario - Minería y Ambiente 🌱 (Aleatorio)</title>
+    <style>
+        :root {
+            --correcto: #2e7d32;
+            --correcto-bg: #c8e6c9;
+            --incorrecto: #c62828;
+            --incorrecto-bg: #ffcdd2;
+            --fondo: #f4f6f9;
+            --tarjeta: #ffffff;
+            --texto: #1e293b;
+            --borde: #e2e8f0;
+            --boton-verdadero: #2563eb;
+            --boton-falso: #7c3aed;
+            --boton-hover-verdadero: #1d4ed8;
+            --boton-hover-falso: #6d28d9;
+            --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --sombra-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #eef2f7;
+            color: var(--texto);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 1.5rem;
+            background-image:
+                radial-gradient(ellipse at 20% 10%, rgba(37, 99, 235, 0.03) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 90%, rgba(124, 58, 237, 0.03) 0%, transparent 60%);
+        }
+
+        .contenedor {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Cabecera */
+        .cabecera {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem 2rem 1.5rem;
+            margin-bottom: 1.8rem;
+            box-shadow: var(--sombra);
+            text-align: center;
+            border: 1px solid var(--borde);
+            position: sticky;
+            top: 1rem;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .cabecera h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.3rem;
+            letter-spacing: -0.02em;
+        }
+
+        .cabecera .subtitulo {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+        }
+
+        /* Barra de progreso */
+        .barra-progreso {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .progreso-texto {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            white-space: nowrap;
+        }
+
+        .progreso-texto span {
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .barra-externa {
+            flex: 1;
+            min-width: 120px;
+            max-width: 300px;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .barra-interna {
+            height: 100%;
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            border-radius: 20px;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+        }
+
+        .btn-reiniciar {
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #475569;
+            transition: all 0.2s;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+
+        .btn-reiniciar:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #1e293b;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Grid de preguntas */
+        .grid-preguntas {
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        /* Tarjeta de pregunta */
+        .tarjeta {
+            background: var(--tarjeta);
+            border-radius: 16px;
+            padding: 1.3rem 1.5rem;
+            box-shadow: var(--sombra);
+            border: 1.5px solid var(--borde);
+            transition: all 0.25s ease;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem;
+            position: relative;
+        }
+
+        .tarjeta:hover {
+            box-shadow: var(--sombra-hover);
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .tarjeta.respondida {
+            border-left: 4px solid #94a3b8;
+        }
+
+        .tarjeta.acertada {
+            border-left: 4px solid var(--correcto);
+            background: #f9fdf9;
+        }
+
+        .tarjeta.fallada {
+            border-left: 4px solid var(--incorrecto);
+            background: #fefafa;
+        }
+
+        .numero-pregunta {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #64748b;
+            background: #f1f5f9;
+            border-radius: 50px;
+            padding: 0.3rem 0.7rem;
+            min-width: 38px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .texto-pregunta {
+            flex: 1;
+            min-width: 200px;
+            font-weight: 500;
+            font-size: 0.98rem;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        .botones {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .btn-respuesta {
+            padding: 0.55rem 1.3rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.88rem;
+            letter-spacing: 0.01em;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .btn-verdadero {
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1.5px solid #bfdbfe;
+        }
+
+        .btn-verdadero:hover:not(:disabled) {
+            background: #dbeafe;
+            border-color: #93c5fd;
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        .btn-falso {
+            background: #f5f3ff;
+            color: #7c3aed;
+            border: 1.5px solid #ddd6fe;
+        }
+
+        .btn-falso:hover:not(:disabled) {
+            background: #ede9fe;
+            border-color: #c4b5fd;
+            transform: scale(1.03);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+        }
+
+        /* Estados de respuesta */
+        .btn-respuesta.correcto {
+            background: var(--correcto-bg) !important;
+            color: var(--correcto) !important;
+            border-color: #81c784 !important;
+            font-weight: 700;
+            cursor: default;
+            animation: pulso-verde 0.5s ease;
+        }
+
+        .btn-respuesta.incorrecto {
+            background: var(--incorrecto-bg) !important;
+            color: var(--incorrecto) !important;
+            border-color: #ef9a9a !important;
+            font-weight: 700;
+            cursor: default;
+            animation: sacudir 0.5s ease;
+        }
+
+        .btn-respuesta:disabled {
+            cursor: default;
+            opacity: 0.85;
+            pointer-events: none;
+        }
+
+        @keyframes pulso-verde {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes sacudir {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-6px); }
+            40% { transform: translateX(6px); }
+            60% { transform: translateX(-4px); }
+            80% { transform: translateX(3px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 650px) {
+            .tarjeta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.6rem;
+                padding: 1rem 1.2rem;
+            }
+            .botones {
+                width: 100%;
+                justify-content: stretch;
+            }
+            .btn-respuesta {
+                flex: 1;
+                text-align: center;
+                padding: 0.6rem 0.8rem;
+            }
+            .cabecera {
+                padding: 1.2rem 1rem;
+                border-radius: 18px;
+                top: 0.5rem;
+            }
+            .cabecera h1 {
+                font-size: 1.5rem;
+            }
+            .barra-progreso {
+                gap: 0.5rem;
+            }
+            .texto-pregunta {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            body {
+                padding: 0.6rem;
+            }
+            .tarjeta {
+                padding: 0.8rem 0.9rem;
+                border-radius: 12px;
+            }
+            .btn-respuesta {
+                font-size: 0.78rem;
+                padding: 0.5rem;
+            }
+            .cabecera h1 {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <!-- Cabecera con progreso -->
+        <header class="cabecera">
+            <h1>📚 Balotario Minería & Ambiente</h1>
+            <p class="subtitulo">Parcial · Verdadero o Falso · 50 preguntas (orden aleatorio)</p>
+            <div class="barra-progreso">
+                <span class="progreso-texto">✅ <span id="contador-respondidas">0</span> / 50 respondidas</span>
+                <div class="barra-externa">
+                    <div class="barra-interna" id="barra-progreso"></div>
+                </div>
+                <span class="progreso-texto" id="contador-aciertos" style="background:#e8f5e9; color:#2e7d32;">🎯 Aciertos: 0</span>
+                <button class="btn-reiniciar" onclick="reiniciarTodo()" title="Reiniciar y mezclar preguntas">🔄 Reiniciar</button>
+            </div>
+        </header>
+
+        <!-- Grid de preguntas -->
+        <div class="grid-preguntas" id="grid-preguntas">
+            <!-- Se llena dinámicamente con JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // DATOS ORIGINALES DEL BALOTARIO (sin modificar)
+        // ============================================
+        const preguntasBase = [
+            { numero: 1, pregunta: "La minería constituye uno de los principales motores de la economía peruana.", respuesta: true },
+            { numero: 2, pregunta: "El desarrollo sostenible busca equilibrar el crecimiento económico, la protección ambiental y el bienestar social.", respuesta: true },
+            { numero: 3, pregunta: "La minería genera únicamente beneficios económicos y ningún impacto ambiental.", respuesta: false },
+            { numero: 4, pregunta: "La minería metálica representa una parte importante de las exportaciones del Perú.", respuesta: true },
+            { numero: 5, pregunta: "El cobre es uno de los minerales más importantes de la economía peruana.", respuesta: true },
+            { numero: 6, pregunta: "El crecimiento de la producción minera aumenta la presión sobre el ambiente.", respuesta: true },
+            { numero: 7, pregunta: "El MINAM es la autoridad ambiental nacional.", respuesta: true },
+            { numero: 8, pregunta: "El SENACE evalúa y aprueba los Estudios de Impacto Ambiental detallados de grandes proyectos.", respuesta: true },
+            { numero: 9, pregunta: "El OEFA fiscaliza el cumplimiento de las obligaciones ambientales.", respuesta: true },
+            { numero: 10, pregunta: "El INGEMMET otorga concesiones mineras.", respuesta: true },
+            { numero: 11, pregunta: "El OEFA entrega concesiones mineras.", respuesta: false },
+            { numero: 12, pregunta: "El SEIA organiza el proceso de evaluación ambiental en el Perú.", respuesta: true },
+            { numero: 13, pregunta: "Todo proyecto con impactos ambientales significativos debe contar con certificación ambiental.", respuesta: true },
+            { numero: 14, pregunta: "Una empresa puede iniciar un proyecto minero sin certificación ambiental.", respuesta: false },
+            { numero: 15, pregunta: "La certificación ambiental se obtiene luego de la aprobación del instrumento ambiental correspondiente.", respuesta: true },
+            { numero: 16, pregunta: "El Estudio de Impacto Ambiental busca prevenir, reducir y controlar impactos negativos.", respuesta: true },
+            { numero: 17, pregunta: "El EIA solo analiza aspectos económicos.", respuesta: false },
+            { numero: 18, pregunta: "La línea base ambiental forma parte del EIA.", respuesta: true },
+            { numero: 19, pregunta: "La participación ciudadana forma parte del proceso de evaluación ambiental.", respuesta: true },
+            { numero: 20, pregunta: "El ITS puede utilizarse para modificaciones menores, no para reemplazar un EIA completo.", respuesta: true },
+            { numero: 21, pregunta: "El EIA también considera impactos sociales.", respuesta: true },
+            { numero: 22, pregunta: "La exploración es la primera etapa del desarrollo de un proyecto minero.", respuesta: true },
+            { numero: 23, pregunta: "Durante la exploración nunca existen impactos ambientales.", respuesta: false },
+            { numero: 24, pregunta: "La construcción implica una fuerte transformación del territorio.", respuesta: true },
+            { numero: 25, pregunta: "Durante la operación minera aumenta la generación de residuos mineros.", respuesta: true },
+            { numero: 26, pregunta: "El cierre de minas busca rehabilitar el área intervenida.", respuesta: true },
+            { numero: 27, pregunta: "Después del cierre de la mina no existe monitoreo ambiental.", respuesta: false },
+            { numero: 28, pregunta: "El cierre de minas también considera aspectos sociales.", respuesta: true },
+            { numero: 29, pregunta: "Durante la explotación minera se utilizan grandes cantidades de agua.", respuesta: true },
+            { numero: 30, pregunta: "La explotación comienza inmediatamente después de descubrir un yacimiento.", respuesta: false },
+            { numero: 31, pregunta: "La minería puede contaminar agua, aire y suelo.", respuesta: true },
+            { numero: 32, pregunta: "El mercurio constituye uno de los principales contaminantes asociados a ciertas actividades mineras.", respuesta: true },
+            { numero: 33, pregunta: "Los pasivos ambientales mineros son problemas ambientales acumulados que requieren recuperación.", respuesta: true },
+            { numero: 34, pregunta: "La contaminación ambiental puede afectar la salud humana.", respuesta: true },
+            { numero: 35, pregunta: "La biodiversidad puede verse afectada por la actividad minera.", respuesta: true },
+            { numero: 36, pregunta: "La minería ilegal genera importantes impactos ambientales.", respuesta: true },
+            { numero: 37, pregunta: "La minería informal e ilegal significan exactamente lo mismo.", respuesta: false },
+            { numero: 38, pregunta: "Los conflictos socioambientales están relacionados únicamente con factores económicos.", respuesta: false },
+            { numero: 39, pregunta: "La participación ciudadana ayuda a prevenir conflictos socioambientales.", respuesta: true },
+            { numero: 40, pregunta: "La transparencia favorece una mejor gobernanza ambiental.", respuesta: true },
+            { numero: 41, pregunta: "El canon minero beneficia a los gobiernos regionales y locales.", respuesta: true },
+            { numero: 42, pregunta: "Las regalías mineras forman parte de los mecanismos económicos vinculados a la minería.", respuesta: true },
+            { numero: 43, pregunta: "La concesión minera autoriza automáticamente el inicio de la explotación.", respuesta: false },
+            { numero: 44, pregunta: "Para ejecutar un proyecto minero también se requieren otros permisos además de la concesión.", respuesta: true },
+            { numero: 45, pregunta: "Los recursos naturales son patrimonio de la Nación.", respuesta: true },
+            { numero: 46, pregunta: "El aprovechamiento de los recursos naturales debe ser sostenible.", respuesta: true },
+            { numero: 47, pregunta: "El desarrollo sostenible solo considera el aspecto ambiental.", respuesta: false },
+            { numero: 48, pregunta: "La fiscalización ambiental contribuye al desarrollo sostenible.", respuesta: true },
+            { numero: 49, pregunta: "El fortalecimiento institucional mejora la gestión ambiental minera.", respuesta: true },
+            { numero: 50, pregunta: "Una adecuada evaluación ambiental reduce el riesgo de conflictos socioambientales.", respuesta: true }
+        ];
+
+        // ============================================
+        // ESTADO DE LA APLICACIÓN
+        // ============================================
+        let estadoRespuestas = {}; // { numeroOriginal: 'acertada' | 'fallada' }
+        // Array que usaremos para mostrar (se mezclará cada vez)
+        let preguntas = [];
+
+        // ============================================
+        // FUNCIÓN PARA MEZCLAR ARRAY (Fisher-Yates)
+        // ============================================
+        function mezclarArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // ============================================
+        // RENDERIZAR PREGUNTAS
+        // ============================================
+        const grid = document.getElementById('grid-preguntas');
+
+        function renderizarPreguntas() {
+            grid.innerHTML = '';
+            // Usamos forEach con índice para mostrar números consecutivos
+            preguntas.forEach((p, index) => {
+                const nuevoNumero = index + 1; // Número de orden actual (1 a 50)
+                const tarjeta = document.createElement('div');
+                tarjeta.classList.add('tarjeta');
+                tarjeta.id = `tarjeta-${p.numero}`; // ID basado en número original para el estado
+
+                // Si ya fue respondida, añadir clase correspondiente
+                if (estadoRespuestas[p.numero] === 'acertada') {
+                    tarjeta.classList.add('respondida', 'acertada');
+                } else if (estadoRespuestas[p.numero] === 'fallada') {
+                    tarjeta.classList.add('respondida', 'fallada');
+                }
+
+                tarjeta.innerHTML = `
+                    <span class="numero-pregunta">#${nuevoNumero}</span>
+                    <span class="texto-pregunta">${p.pregunta}</span>
+                    <div class="botones">
+                        <button class="btn-respuesta btn-verdadero" 
+                                data-numero="${p.numero}" 
+                                data-respuesta-usuario="true"
+                                ${estadoRespuestas[p.numero] ? 'disabled' : ''}>
+                            ✅ Verdadero
+                        </button>
+                        <button class="btn-respuesta btn-falso" 
+                                data-numero="${p.numero}" 
+                                data-respuesta-usuario="false"
+                                ${estadoRespuestas[p.numero] ? 'disabled' : ''}>
+                            ❌ Falso
+                        </button>
+                    </div>
+                `;
+
+                // Si ya fue respondida, marcar visualmente los botones
+                if (estadoRespuestas[p.numero]) {
+                    const btnVerdadero = tarjeta.querySelector('.btn-verdadero');
+                    const btnFalso = tarjeta.querySelector('.btn-falso');
+                    if (p.respuesta === true) {
+                        btnVerdadero.classList.add('correcto');
+                        if (estadoRespuestas[p.numero] === 'fallada') {
+                            btnFalso.classList.add('incorrecto');
+                        }
+                    } else {
+                        btnFalso.classList.add('correcto');
+                        if (estadoRespuestas[p.numero] === 'fallada') {
+                            btnVerdadero.classList.add('incorrecto');
+                        }
+                    }
+                }
+
+                grid.appendChild(tarjeta);
+            });
+
+            // Re-asignar event listeners
+            asignarEventos();
+            actualizarProgreso();
+        }
+
+        // ============================================
+        // ASIGNAR EVENTOS A BOTONES
+        // ============================================
+        function asignarEventos() {
+            const botones = document.querySelectorAll('.btn-respuesta:not([disabled])');
+            botones.forEach(btn => {
+                btn.addEventListener('click', manejarClick);
+            });
+        }
+
+        function manejarClick(evento) {
+            const btn = evento.currentTarget;
+            const numero = parseInt(btn.dataset.numero);
+            const respuestaUsuario = btn.dataset.respuestaUsuario === 'true'; // true = Verdadero
+
+            // Encontrar la pregunta en el array actual (mezclado)
+            const pregunta = preguntas.find(p => p.numero === numero);
+            if (!pregunta) return;
+
+            const respuestaCorrecta = pregunta.respuesta;
+            const acerto = (respuestaUsuario === respuestaCorrecta);
+
+            // Registrar estado
+            estadoRespuestas[numero] = acerto ? 'acertada' : 'fallada';
+
+            // Obtener la tarjeta y los botones
+            const tarjeta = document.getElementById(`tarjeta-${numero}`);
+            const btnVerdadero = tarjeta.querySelector('.btn-verdadero');
+            const btnFalso = tarjeta.querySelector('.btn-falso');
+
+            // Deshabilitar ambos botones
+            btnVerdadero.disabled = true;
+            btnFalso.disabled = true;
+
+            // Marcar el botón correcto siempre en verde
+            if (respuestaCorrecta === true) {
+                btnVerdadero.classList.add('correcto');
+            } else {
+                btnFalso.classList.add('correcto');
+            }
+
+            // Si el usuario falló, marcar el botón clickeado en rojo
+            if (!acerto) {
+                btn.classList.add('incorrecto');
+            }
+
+            // Actualizar clases de la tarjeta
+            tarjeta.classList.add('respondida');
+            if (acerto) {
+                tarjeta.classList.add('acertada');
+            } else {
+                tarjeta.classList.add('fallada');
+            }
+
+            // Scroll suave
+            tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            actualizarProgreso();
+        }
+
+        // ============================================
+        // ACTUALIZAR BARRA DE PROGRESO
+        // ============================================
+        function actualizarProgreso() {
+            const total = preguntas.length;
+            const respondidas = Object.keys(estadoRespuestas).length;
+            const aciertos = Object.values(estadoRespuestas).filter(v => v === 'acertada').length;
+
+            document.getElementById('contador-respondidas').textContent = respondidas;
+            document.getElementById('contador-aciertos').textContent = `🎯 Aciertos: ${aciertos}`;
+            document.getElementById('barra-progreso').style.width = `${(respondidas / total) * 100}%`;
+
+            // Color del contador de aciertos según rendimiento
+            const contadorAciertos = document.getElementById('contador-aciertos');
+            if (respondidas > 0) {
+                const porcentaje = (aciertos / respondidas) * 100;
+                if (porcentaje >= 80) {
+                    contadorAciertos.style.background = '#e8f5e9';
+                    contadorAciertos.style.color = '#2e7d32';
+                } else if (porcentaje >= 50) {
+                    contadorAciertos.style.background = '#fff8e1';
+                    contadorAciertos.style.color = '#f57f17';
+                } else {
+                    contadorAciertos.style.background = '#ffebee';
+                    contadorAciertos.style.color = '#c62828';
+                }
+            }
+        }
+
+        // ============================================
+        // REINICIAR TODO (limpia respuestas y reordena)
+        // ============================================
+        function reiniciarTodo() {
+            if (Object.keys(estadoRespuestas).length > 0) {
+                if (!confirm('¿Seguro que deseas reiniciar? Se mezclarán las preguntas y perderás el progreso actual.')) {
+                    return;
+                }
+            }
+            // Limpiar estado
+            estadoRespuestas = {};
+            // Mezclar preguntas de nuevo
+            preguntas = mezclarArray([...preguntasBase]);
+            // Re-renderizar
+            renderizarPreguntas();
+            // Scroll al inicio
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Restaurar color del contador de aciertos
+            document.getElementById('contador-aciertos').style.background = '#e8f5e9';
+            document.getElementById('contador-aciertos').style.color = '#2e7d32';
+        }
+
+        // ============================================
+        // INICIALIZAR (mezclar al cargar la página)
+        // ============================================
+        preguntas = mezclarArray([...preguntasBase]);
+        renderizarPreguntas();
+
+        console.log('✅ Balotario listo con preguntas en orden aleatorio y numeración consecutiva.');
+        console.log('📊 Total de preguntas:', preguntas.length);
+        console.log('🟢 Verdadero:', preguntasBase.filter(p => p.respuesta === true).length);
+        console.log('🔴 Falso:', preguntasBase.filter(p => p.respuesta === false).length);
+        console.log('🔄 Cada vez que reinicies, el orden y los números visibles cambiarán.');
+    </script>
+</body>
+</html>
